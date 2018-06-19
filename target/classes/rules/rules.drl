@@ -1,0 +1,1940 @@
+package com.drools.example
+import javafx.scene.control.Alert
+import java.util.Optional
+
+
+declare Question
+    question : String
+    answer : String
+end
+
+
+
+rule "res"
+    when
+    then
+        Question query = new Question();
+        query.setQuestion("Do You want a responsible job ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "higher"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+    then
+        Question query = new Question();
+        query.setQuestion("Marks higher than 60% ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "hippie"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "No")
+    then
+        Komunikator.Zakoncz("Become a hippie !");
+    end
+
+
+
+rule "40times"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Maybe")
+    then
+        Question query = new Question();
+        query.setQuestion("Have You done this 40 times ?");
+        Komunikator.Zakoncz("Go to work for a Year");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+
+rule "studyhard"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes") or
+        f3 : Question(question == "Willing to study hard ?" && answer == "Maybe")
+    then
+        Question query = new Question();
+        query.setQuestion("Willing to study hard ?");
+        query.setAnswer(Komunikator.ZapytajTrzy(query.getQuestion()));
+        insert(query);
+    end
+
+rule "oldage"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Maybe")
+        f4 : Question(question == "Have You done this 40 times ?" && answer == "Yes" )
+    then
+        Komunikator.Zakoncz("Collect old age pension !");
+    end
+
+rule "university"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+    then
+        Komunikator.Zakoncz("Go to University !");
+        Question query = new Question();
+        query.setQuestion("Do You want to help society ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "lawyer"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "No")
+    then
+        Komunikator.Zakoncz("Become a lawyer !");
+        Komunikator.Zakoncz("Run for parliament !");
+        Komunikator.Zakoncz("Get appointed to Senate !");
+    end
+rule "language"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes") or
+        f5 : Question(question == "Are You good in English or French ?" && answer == "")
+    then
+        Question query = new Question();
+        query.setQuestion("Are You good in English or French ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+rule "remedial"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "No")
+    then
+        Komunikator.Zakoncz("Take remedial language class");
+        modify(f5){setAnswer("")};
+
+    end
+
+rule "rich"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+    then
+        Question query = new Question();
+        query.setQuestion("Want to become rich ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "richyes"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "Yes")
+    then
+       Komunikator.Zakoncz("This flow-sheet can not help You !");
+       Komunikator.Zakoncz("Find someone else to bother !");
+       Komunikator.Zakoncz("Go away !");
+    end
+
+rule "practical"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+    then
+        Question query = new Question();
+        query.setQuestion("Interested in practical problems ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "statistician"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "No")
+    then
+        Komunikator.Zakoncz("Become a Statistician");
+    end
+
+rule "think"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+    then
+        Question query = new Question();
+        query.setQuestion("Think these questions are endless ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "thinkyes"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "Yes")
+    then
+        Komunikator.Zakoncz("You are too unrealistic to be an engineer !");
+        Komunikator.Zakoncz("This flow-sheet can not help You !");
+        Komunikator.Zakoncz("Find someone else to bother !");
+        Komunikator.Zakoncz("Go away !");
+    end
+
+rule "science"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+    then
+        Question query = new Question();
+        query.setQuestion("Interested in science ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "scienceno"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "No")
+    then
+        Komunikator.Zakoncz("This flow-sheet can not help You !");
+        Komunikator.Zakoncz("Find someone else to bother !");
+        Komunikator.Zakoncz("Go away !");
+    end
+
+rule "further"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f3 : Question(question == "Marks higher than 60% ?" && answer == "No") or
+        f4 : Question(question == "Can You get a job ?" && answer == "") or
+        f5 : Question(question == "Will it last ?" && answer == "") or
+        f6 : Question(question == "Willing to study hard ?" && answer == "No")
+
+    then
+        Question query = new Question();
+        query.setQuestion("Want further schooling ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "job"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "No") or
+        f6 : Question(question == "Willing to study hard ?" && answer == "No")
+        f3 : Question(question == "Want further schooling ?" && answer == "No")
+    then
+        Question query = new Question();
+        query.setQuestion("Can You get a job ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "last"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "No") or
+        f3 : Question(question == "Willing to study hard ?" && answer == "No")
+        f4 : Question(question == "Want further schooling ?" && answer == "No")
+        f5 : Question(question == "Can You get a job ?" && answer == "Yes")
+    then
+        Question query = new Question();
+        query.setQuestion("Will it last ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "lastyes"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "No") or
+        f3 : Question(question == "Willing to study hard ?" && answer == "No")
+        f4 : Question(question == "Want further schooling ?" && answer == "No")
+        f5 : Question(question == "Can You get a job ?" && answer == "Yes")
+        f6 : Question(question == "Will it last ?" && answer == "Yes")
+    then
+        Komunikator.Zakoncz("You are luckier than most !");
+        Komunikator.Zakoncz("Continue as long as You can !");
+    end
+rule "jobno"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "No") or
+        f3 : Question(question == "Willing to study hard ?" && answer == "No")
+        f4 : Question(question == "Want further schooling ?" && answer == "No")
+        f5 : Question(question == "Can You get a job ?" && answer == "No")
+    then
+        modify(f4){setAnswer("")};
+        modify(f5){setAnswer("")};
+    end
+
+rule "lastno"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "No") or
+        f3 : Question(question == "Willing to study hard ?" && answer == "No")
+        f4 : Question(question == "Want further schooling ?" && answer == "No")
+        f5 : Question(question == "Can You get a job ?" && answer == "Yes")
+        f6 : Question(question == "Will it last ?" && answer == "No")
+    then
+        modify(f4){setAnswer("")};
+        modify(f5){setAnswer(" ")};
+        modify(f6){setAnswer("")};
+
+    end
+
+rule "sciences"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "No") or
+        f3 : Question(question == "Willing to study hard ?" && answer == "No")
+        f4 : Question(question == "Want further schooling ?" && answer == "Yes")
+    then
+        Komunikator.Zakoncz("Go to technical school !");
+        Question query = new Question();
+        query.setQuestion("Interested in sciences ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "sciencesno"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "No") or
+        f3 : Question(question == "Willing to study hard ?" && answer == "No")
+        f4 : Question(question == "Want further schooling ?" && answer == "Yes")
+        f5 : Question(question == "Interested in sciences ?" && answer == "No")
+    then
+       Komunikator.Zakoncz("This flow-sheet can not help You !");
+       Komunikator.Zakoncz("Find someone else to bother !");
+       Komunikator.Zakoncz("Go away !");
+    end
+
+rule "outdor"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "No") or
+        f3 : Question(question == "Willing to study hard ?" && answer == "No")
+        f4 : Question(question == "Want further schooling ?" && answer == "Yes")
+        f5 : Question(question == "Interested in sciences ?" && answer == "Yes")
+    then
+        Question query = new Question();
+        query.setQuestion("Like outdoor work ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "biology"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "No") or
+        f3 : Question(question == "Willing to study hard ?" && answer == "No")
+        f4 : Question(question == "Want further schooling ?" && answer == "Yes")
+        f5 : Question(question == "Interested in sciences ?" && answer == "Yes")
+        f6 : Question(question == "Like outdoor work ?" && answer == "Yes")
+    then
+        Question query = new Question();
+        query.setQuestion("Like biology ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "biologyyes"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "No") or
+        f3 : Question(question == "Willing to study hard ?" && answer == "No")
+        f4 : Question(question == "Want further schooling ?" && answer == "Yes")
+        f5 : Question(question == "Interested in sciences ?" && answer == "Yes")
+        f6 : Question(question == "Like outdoor work ?" && answer == "Yes")
+        f7 : Question(question == "Like biology ?" && answer == "Yes")
+    then
+        Komunikator.Zakoncz("This flow-sheet can not help You !");
+        Komunikator.Zakoncz("Find someone else to bother !");
+        Komunikator.Zakoncz("Go away !");
+    end
+
+rule "biologyno"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "No") or
+        f3 : Question(question == "Willing to study hard ?" && answer == "No")
+        f4 : Question(question == "Want further schooling ?" && answer == "Yes")
+        f5 : Question(question == "Interested in sciences ?" && answer == "Yes")
+        f6 : Question(question == "Like outdoor work ?" && answer == "Yes")
+        f7 : Question(question == "Like biology ?" && answer == "No")
+    then
+        Komunikator.Zakoncz("Take surveying course !");
+    end
+
+rule "electronics"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "No") or
+        f3 : Question(question == "Willing to study hard ?" && answer == "No")
+        f4 : Question(question == "Want further schooling ?" && answer == "Yes")
+        f5 : Question(question == "Interested in sciences ?" && answer == "Yes")
+        f6 : Question(question == "Like outdoor work ?" && answer == "No")
+    then
+        Question query = new Question();
+        query.setQuestion("Like electronics ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "electronicsyes"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "No") or
+        f3 : Question(question == "Willing to study hard ?" && answer == "No")
+        f4 : Question(question == "Want further schooling ?" && answer == "Yes")
+        f5 : Question(question == "Interested in sciences ?" && answer == "Yes")
+        f6 : Question(question == "Like outdoor work ?" && answer == "No")
+        f7 : Question(question == "Like electronics ?" && answer == "Yes")
+    then
+        Komunikator.Zakoncz("Take electronics course !");
+    end
+
+rule "shop"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "No") or
+        f3 : Question(question == "Willing to study hard ?" && answer == "No")
+        f4 : Question(question == "Want further schooling ?" && answer == "Yes")
+        f5 : Question(question == "Interested in sciences ?" && answer == "Yes")
+        f6 : Question(question == "Like outdoor work ?" && answer == "No")
+        f7 : Question(question == "Like electronics ?" && answer == "No")
+    then
+            Question query = new Question();
+            query.setQuestion("Like working in shop ?");
+            query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+            insert(query);
+    end
+
+rule "shopyes"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "No") or
+        f3 : Question(question == "Willing to study hard ?" && answer == "No")
+        f4 : Question(question == "Want further schooling ?" && answer == "Yes")
+        f5 : Question(question == "Interested in sciences ?" && answer == "Yes")
+        f6 : Question(question == "Like outdoor work ?" && answer == "No")
+        f7 : Question(question == "Like electronics ?" && answer == "No")
+        f8 : Question(question == "Like working in shop ?" && answer == "Yes")
+    then
+        Komunikator.Zakoncz("Take machine shop course !");
+    end
+
+rule "bug"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "No") or
+        f3 : Question(question == "Willing to study hard ?" && answer == "No")
+        f4 : Question(question == "Want further schooling ?" && answer == "Yes")
+        f5 : Question(question == "Interested in sciences ?" && answer == "Yes")
+        f6 : Question(question == "Like outdoor work ?" && answer == "No")
+        f7 : Question(question == "Like electronics ?" && answer == "No")
+        f8 : Question(question == "Like working in shop ?" && answer == "No")
+    then
+                Question query = new Question();
+                query.setQuestion("Does all this detail bug You ?");
+                query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+                insert(query);
+    end
+
+rule "bugyes"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "No") or
+        f3 : Question(question == "Willing to study hard ?" && answer == "No")
+        f4 : Question(question == "Want further schooling ?" && answer == "Yes")
+        f5 : Question(question == "Interested in sciences ?" && answer == "Yes")
+        f6 : Question(question == "Like outdoor work ?" && answer == "No")
+        f7 : Question(question == "Like electronics ?" && answer == "No")
+        f8 : Question(question == "Like working in shop ?" && answer == "No")
+        f9 : Question(question == "Does all this detail bug You ?" && answer == "Yes")
+    then
+        Komunikator.Zakoncz("This flow-sheet can not help You !");
+        Komunikator.Zakoncz("Find someone else to bother !");
+        Komunikator.Zakoncz("Go away !");
+    end
+
+rule "drafting"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "No") or
+        f3 : Question(question == "Willing to study hard ?" && answer == "No")
+        f4 : Question(question == "Want further schooling ?" && answer == "Yes")
+        f5 : Question(question == "Interested in sciences ?" && answer == "Yes")
+        f6 : Question(question == "Like outdoor work ?" && answer == "No")
+        f7 : Question(question == "Like electronics ?" && answer == "No")
+        f8 : Question(question == "Like working in shop ?" && answer == "No")
+        f9 : Question(question == "Does all this detail bug You ?" && answer == "No")
+    then
+        Question query = new Question();
+        query.setQuestion("Like drafting ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "draftingyes"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "No") or
+        f3 : Question(question == "Willing to study hard ?" && answer == "No")
+        f4 : Question(question == "Want further schooling ?" && answer == "Yes")
+        f5 : Question(question == "Interested in sciences ?" && answer == "Yes")
+        f6 : Question(question == "Like outdoor work ?" && answer == "No")
+        f7 : Question(question == "Like electronics ?" && answer == "No")
+        f8 : Question(question == "Like working in shop ?" && answer == "No")
+        f9 : Question(question == "Does all this detail bug You ?" && answer == "No")
+        f10 : Question(question == "Like drafting ?" && answer == "Yes")
+    then
+        Komunikator.Zapytaj("Take drafting course !");
+    end
+
+rule "sense"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "No") or
+        f3 : Question(question == "Willing to study hard ?" && answer == "No")
+        f4 : Question(question == "Want further schooling ?" && answer == "Yes")
+        f5 : Question(question == "Interested in sciences ?" && answer == "Yes")
+        f6 : Question(question == "Like outdoor work ?" && answer == "No")
+        f7 : Question(question == "Like electronics ?" && answer == "No")
+        f8 : Question(question == "Like working in shop ?" && answer == "No")
+        f9 : Question(question == "Does all this detail bug You ?" && answer == "No")
+        f10 : Question(question == "Like drafting ?" && answer == "No")
+    then
+            Question query = new Question();
+            query.setQuestion("Do these questions make sense ?");
+            query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+            insert(query);
+    end
+
+rule "senseno"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "No") or
+        f3 : Question(question == "Willing to study hard ?" && answer == "No")
+        f4 : Question(question == "Want further schooling ?" && answer == "Yes")
+        f5 : Question(question == "Interested in sciences ?" && answer == "Yes")
+        f6 : Question(question == "Like outdoor work ?" && answer == "No")
+        f7 : Question(question == "Like electronics ?" && answer == "No")
+        f8 : Question(question == "Like working in shop ?" && answer == "No")
+        f9 : Question(question == "Does all this detail bug You ?" && answer == "No")
+        f10 : Question(question == "Like drafting ?" && answer == "No")
+        f11 : Question(question == "Do these questions make sense ?" && answer == "No")
+    then
+            Komunikator.Zakoncz("Go jump in the lake !");
+    end
+
+rule "chemistry"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "No") or
+        f3 : Question(question == "Willing to study hard ?" && answer == "No")
+        f4 : Question(question == "Want further schooling ?" && answer == "Yes")
+        f5 : Question(question == "Interested in sciences ?" && answer == "Yes")
+        f6 : Question(question == "Like outdoor work ?" && answer == "No")
+        f7 : Question(question == "Like electronics ?" && answer == "No")
+        f8 : Question(question == "Like working in shop ?" && answer == "No")
+        f9 : Question(question == "Does all this detail bug You ?" && answer == "No")
+        f10 : Question(question == "Like drafting ?" && answer == "No")
+        f11 : Question(question == "Do these questions make sense ?" && answer == "Yes")
+    then
+            Question query = new Question();
+            query.setQuestion("Like chemistry ?");
+            query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+            insert(query);
+    end
+
+rule "chemistryyes"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "No") or
+        f3 : Question(question == "Willing to study hard ?" && answer == "No")
+        f4 : Question(question == "Want further schooling ?" && answer == "Yes")
+        f5 : Question(question == "Interested in sciences ?" && answer == "Yes")
+        f6 : Question(question == "Like outdoor work ?" && answer == "No")
+        f7 : Question(question == "Like electronics ?" && answer == "No")
+        f8 : Question(question == "Like working in shop ?" && answer == "No")
+        f9 : Question(question == "Does all this detail bug You ?" && answer == "No")
+        f10 : Question(question == "Like drafting ?" && answer == "No")
+        f11 : Question(question == "Do these questions make sense ?" && answer == "Yes")
+        f12 : Question(question == "Like chemistry ?" && answer == "Yes")
+    then
+            Komunikator.Zakoncz("Take chemical technology course !");
+    end
+
+rule "chemistryno"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "No") or
+        f3 : Question(question == "Willing to study hard ?" && answer == "No")
+        f4 : Question(question == "Want further schooling ?" && answer == "Yes")
+        f5 : Question(question == "Interested in sciences ?" && answer == "Yes")
+        f6 : Question(question == "Like outdoor work ?" && answer == "No")
+        f7 : Question(question == "Like electronics ?" && answer == "No")
+        f8 : Question(question == "Like working in shop ?" && answer == "No")
+        f9 : Question(question == "Does all this detail bug You ?" && answer == "No")
+        f10 : Question(question == "Like drafting ?" && answer == "No")
+        f11 : Question(question == "Do these questions make sense ?" && answer == "Yes")
+        f12 : Question(question == "Like chemistry ?" && answer == "No")
+    then
+            Komunikator.Zakoncz("Consult calendar for other options !");
+    end
+
+rule "math"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+    then
+        Question query = new Question();
+        query.setQuestion("Interested in mathematics ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "goodmath"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+    then
+        Question query = new Question();
+        query.setQuestion("Good at mathematics ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "nomath"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "No")
+    then
+        Komunikator.Zakoncz("Become a field biologist !");
+    end
+
+rule "nogoodmath"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "No")
+    then
+        Komunikator.Zakoncz("Become a technical journalist !");
+    end
+
+rule "analysing"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+    then
+        Question query = new Question();
+        query.setQuestion("Good at analysing logical problems ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "noanalysing"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "No")
+    then
+        Komunikator.Zakoncz("This flow-sheet can not help You !");
+        Komunikator.Zakoncz("Find someone else to bother !");
+        Komunikator.Zakoncz("Go away !");
+    end
+
+rule "application"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+    then
+        Question query = new Question();
+        query.setQuestion("Prefer application over theory ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "noapplication"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "No")
+    then
+        Komunikator.Zakoncz("Become a research scientist");
+    end
+
+rule "lotmath"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+    then
+        Komunikator.Zakoncz("You have an aptitude for engineering");
+        Komunikator.Zakoncz("Enroll in college of engineering");
+        Komunikator.Zakoncz("Pay tuition fee");
+        Question query = new Question();
+        query.setQuestion("Like mathematics a lot ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "electronics2"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like mathematics a lot ?" && answer == "Yes")
+    then
+        Question query = new Question();
+        query.setQuestion("Like electronics ? ");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "chemistry2"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like mathematics a lot ?" && answer == "Yes")
+        f15 : Question(question == "Like electronics ? " && answer == "No")
+    then
+        Question query = new Question();
+        query.setQuestion("Like chemistry ? ");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "geology"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like mathematics a lot ?" && answer == "Yes") or
+        f15 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f16 : Question(question == "Like electronics ? " && answer == "No") or
+        f17 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f18 : Question(question == "Like chemistry ? " && answer == "No") or
+        f19 : Question(question == "Like mathematics a lot ?" && answer == "No")
+    then
+        Question query = new Question();
+        query.setQuestion("Like geology ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "claustrophobia"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like mathematics a lot ?" && answer == "Yes") or
+        f15 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f16 : Question(question == "Like electronics ? " && answer == "No") or
+        f17 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f18 : Question(question == "Like chemistry ? " && answer == "No") or
+        f19 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f20 : Question(question == "Like geology ?" && answer == "Yes")
+    then
+        Question query = new Question();
+        query.setQuestion("Suffer from claustrophobia ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "machinery"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like mathematics a lot ?" && answer == "Yes") or
+        f15 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f16 : Question(question == "Like electronics ? " && answer == "No") or
+        f17 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f18 : Question(question == "Like chemistry ? " && answer == "No") or
+        f19 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f20 : Question(question == "Like geology ?" && answer == "No")
+    then
+        Question query = new Question();
+        query.setQuestion("Like working witch machinery ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "agriculture"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like mathematics a lot ?" && answer == "Yes") or
+        f15 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f16 : Question(question == "Like electronics ? " && answer == "No") or
+        f17 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f18 : Question(question == "Like chemistry ? " && answer == "No") or
+        f19 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f20 : Question(question == "Like geology ?" && answer == "No")
+        f21 : Question(question == "Like working witch machinery ?" && answer == "Yes")
+    then
+        Question query = new Question();
+        query.setQuestion("Interested in agriculture ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "withus"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like mathematics a lot ?" && answer == "Yes") or
+        f15 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f16 : Question(question == "Like electronics ? " && answer == "No") or
+        f17 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f18 : Question(question == "Like chemistry ? " && answer == "No") or
+        f19 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f20 : Question(question == "Like geology ?" && answer == "No")
+        f21 : Question(question == "Like working witch machinery ?" && answer == "No")
+    then
+        Question query = new Question();
+        query.setQuestion("Are You still with us ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "withusno"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like mathematics a lot ?" && answer == "Yes") or
+        f15 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f16 : Question(question == "Like electronics ? " && answer == "No") or
+        f17 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f18 : Question(question == "Like chemistry ? " && answer == "No") or
+        f19 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f20 : Question(question == "Like geology ?" && answer == "No")
+        f21 : Question(question == "Like working witch machinery ?" && answer == "No")
+        f22 : Question(question == "Are You still with us ?" && answer == "No")
+    then
+            Komunikator.Zakoncz("This flow-sheet can not help You !");
+            Komunikator.Zakoncz("Find someone else to bother !");
+            Komunikator.Zakoncz("Go away !");
+    end
+
+rule "construction"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like mathematics a lot ?" && answer == "Yes") or
+        f15 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f16 : Question(question == "Like electronics ? " && answer == "No") or
+        f17 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f18 : Question(question == "Like chemistry ? " && answer == "No") or
+        f19 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f20 : Question(question == "Like geology ?" && answer == "No")
+        f21 : Question(question == "Like working witch machinery ?" && answer == "No")
+        f22 : Question(question == "Are You still with us ?" && answer == "Yes")
+    then
+        Question query = new Question();
+        query.setQuestion("Like construction problems ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+ rule "eengineering"
+     when
+         f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+         f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+         f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+         f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+         f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+         f6 : Question(question == "Want to become rich ?" && answer == "No")
+         f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+         f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+         f9 : Question(question == "Interested in science ?" && answer == "Yes")
+         f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+         f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+         f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+         f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+         f14 : Question(question == "Like mathematics a lot ?" && answer == "Yes")
+         f15 : Question(question == "Like electronics ? " && answer == "Yes")
+     then
+        Komunikator.Zakoncz("Take 4 years of electronical engineering !");
+     end
+
+ rule "cengineering"
+     when
+         f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+         f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+         f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+         f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+         f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+         f6 : Question(question == "Want to become rich ?" && answer == "No")
+         f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+         f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+         f9 : Question(question == "Interested in science ?" && answer == "Yes")
+         f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+         f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+         f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+         f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+         f14 : Question(question == "Like mathematics a lot ?" && answer == "Yes")
+         f15 : Question(question == "Like electronics ? " && answer == "No")
+         f16 : Question(question == "Like chemistry ? " && answer == "Yes")
+     then
+        Komunikator.Zakoncz("Take 4 years of chemical engineering !");
+     end
+
+rule "mengineering"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like mathematics a lot ?" && answer == "Yes") or
+        f15 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f16 : Question(question == "Like electronics ? " && answer == "No") or
+        f17 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f18 : Question(question == "Like chemistry ? " && answer == "No") or
+        f19 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f20 : Question(question == "Like geology ?" && answer == "Yes")
+        f21 : Question(question == "Suffer from claustrophobia ?" && answer == "No")
+    then
+            Komunikator.Zakoncz("Take 4 years of mining engineering !");
+    end
+
+rule "pengineering"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like mathematics a lot ?" && answer == "Yes") or
+        f15 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f16 : Question(question == "Like electronics ? " && answer == "No") or
+        f17 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f18 : Question(question == "Like chemistry ? " && answer == "No") or
+        f19 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f20 : Question(question == "Like geology ?" && answer == "Yes")
+        f21 : Question(question == "Suffer from claustrophobia ?" && answer == "Yes")
+    then
+        Komunikator.Zakoncz("Take 4 years of petroleum engineering !");
+    end
+
+rule "mechengineering"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like mathematics a lot ?" && answer == "Yes") or
+        f15 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f16 : Question(question == "Like electronics ? " && answer == "No") or
+        f17 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f18 : Question(question == "Like chemistry ? " && answer == "No") or
+        f19 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f20 : Question(question == "Like geology ?" && answer == "No")
+        f21 : Question(question == "Like working witch machinery ?" && answer == "Yes")
+        f22 : Question(question == "Interested in agriculture ?" && answer == "No")
+    then
+        Komunikator.Zakoncz("Take 4 years of mechanical engineering !");
+    end
+
+rule "aengineering"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like mathematics a lot ?" && answer == "Yes") or
+        f15 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f16 : Question(question == "Like electronics ? " && answer == "No") or
+        f17 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f18 : Question(question == "Like chemistry ? " && answer == "No") or
+        f19 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f20 : Question(question == "Like geology ?" && answer == "No")
+        f21 : Question(question == "Like working witch machinery ?" && answer == "Yes")
+        f22 : Question(question == "Interested in agriculture ?" && answer == "Yes")
+    then
+        Komunikator.Zakoncz("Take 4 years of agricultural engineering !");
+    end
+
+rule "civengineering"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like mathematics a lot ?" && answer == "Yes") or
+        f15 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f16 : Question(question == "Like electronics ? " && answer == "No") or
+        f17 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f18 : Question(question == "Like chemistry ? " && answer == "No") or
+        f19 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f20 : Question(question == "Like geology ?" && answer == "No")
+        f21 : Question(question == "Like working witch machinery ?" && answer == "No")
+        f22 : Question(question == "Are You still with us ?" && answer == "Yes")
+        f23 : Question(question == "Like construction problems ?" && answer == "Yes")
+    then
+        Komunikator.Zakoncz("Take 4 years of civil engineering !");
+    end
+
+rule "calendar"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like mathematics a lot ?" && answer == "Yes") or
+        f15 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f16 : Question(question == "Like electronics ? " && answer == "No") or
+        f17 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f18 : Question(question == "Like chemistry ? " && answer == "No") or
+        f19 : Question(question == "Like mathematics a lot ?" && answer == "No")
+        f20 : Question(question == "Like geology ?" && answer == "No")
+        f21 : Question(question == "Like working witch machinery ?" && answer == "No")
+        f22 : Question(question == "Are You still with us ?" && answer == "Yes")
+        f23 : Question(question == "Like construction problems ?" && answer == "No")
+    then
+        Komunikator.Zakoncz("Consult calendar for other options !");
+    end
+
+rule "takeengineering"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like electronics ? " && answer == "Yes") or
+        f15 : Question(question == "Like chemistry ? " && answer == "Yes") or
+        f16 : Question(question == "Suffer from claustrophobia ?" && answer == "Yes") or
+        f17 : Question(question == "Suffer from claustrophobia ?" && answer == "No") or
+        f18 : Question(question == "Interested in agriculture ?" && answer == "Yes") or
+        f19 : Question(question == "Interested in agriculture ?" && answer == "No") or
+        f20 : Question(question == "Like construction problems ?" && answer == "Yes") or
+        f21 : Question(question == "Like construction problems ?" && answer == "No")
+    then
+        Question query = new Question();
+        query.setQuestion("Wish You hadn't taken engineering ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "takeengineeringyes"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like electronics ? " && answer == "Yes") or
+        f15 : Question(question == "Like chemistry ? " && answer == "Yes") or
+        f16 : Question(question == "Suffer from claustrophobia ?" && answer == "Yes") or
+        f17 : Question(question == "Suffer from claustrophobia ?" && answer == "No") or
+        f18 : Question(question == "Interested in agriculture ?" && answer == "Yes") or
+        f19 : Question(question == "Interested in agriculture ?" && answer == "No") or
+        f20 : Question(question == "Like construction problems ?" && answer == "Yes") or
+        f21 : Question(question == "Like construction problems ?" && answer == "No")
+        f22 : Question(question == "Wish You hadn't taken engineering ?" && answer == "Yes")
+    then
+        Komunikator.Zakoncz("You are still qualified as a research scientist");
+    end
+
+rule "graduate"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like electronics ? " && answer == "Yes") or
+        f15 : Question(question == "Like chemistry ? " && answer == "Yes") or
+        f16 : Question(question == "Suffer from claustrophobia ?" && answer == "Yes") or
+        f17 : Question(question == "Suffer from claustrophobia ?" && answer == "No") or
+        f18 : Question(question == "Interested in agriculture ?" && answer == "Yes") or
+        f19 : Question(question == "Interested in agriculture ?" && answer == "No") or
+        f20 : Question(question == "Like construction problems ?" && answer == "Yes") or
+        f21 : Question(question == "Like construction problems ?" && answer == "No")
+        f22 : Question(question == "Wish You hadn't taken engineering ?" && answer == "No")
+    then
+        Question query = new Question();
+        query.setQuestion("Want graduate studies ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "administration"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like electronics ? " && answer == "Yes") or
+        f15 : Question(question == "Like chemistry ? " && answer == "Yes") or
+        f16 : Question(question == "Suffer from claustrophobia ?" && answer == "Yes") or
+        f17 : Question(question == "Suffer from claustrophobia ?" && answer == "No") or
+        f18 : Question(question == "Interested in agriculture ?" && answer == "Yes") or
+        f19 : Question(question == "Interested in agriculture ?" && answer == "No") or
+        f20 : Question(question == "Like construction problems ?" && answer == "Yes") or
+        f21 : Question(question == "Like construction problems ?" && answer == "No")
+        f22 : Question(question == "Wish You hadn't taken engineering ?" && answer == "No")
+        f23 : Question(question == "Want graduate studies ?" && answer == "Yes")
+    then
+        Question query = new Question();
+        query.setQuestion("Like administration ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "reallylikemath"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like electronics ? " && answer == "Yes") or
+        f15 : Question(question == "Like chemistry ? " && answer == "Yes") or
+        f16 : Question(question == "Suffer from claustrophobia ?" && answer == "Yes") or
+        f17 : Question(question == "Suffer from claustrophobia ?" && answer == "No") or
+        f18 : Question(question == "Interested in agriculture ?" && answer == "Yes") or
+        f19 : Question(question == "Interested in agriculture ?" && answer == "No") or
+        f20 : Question(question == "Like construction problems ?" && answer == "Yes") or
+        f21 : Question(question == "Like construction problems ?" && answer == "No")
+        f22 : Question(question == "Wish You hadn't taken engineering ?" && answer == "No")
+        f23 : Question(question == "Want graduate studies ?" && answer == "Yes")
+        f24 : Question(question == "Like administration ?" && answer == "No")
+    then
+        Question query = new Question();
+        query.setQuestion("Really, really like mathematics ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "administration2"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like electronics ? " && answer == "Yes") or
+        f15 : Question(question == "Like chemistry ? " && answer == "Yes") or
+        f16 : Question(question == "Suffer from claustrophobia ?" && answer == "Yes") or
+        f17 : Question(question == "Suffer from claustrophobia ?" && answer == "No") or
+        f18 : Question(question == "Interested in agriculture ?" && answer == "Yes") or
+        f19 : Question(question == "Interested in agriculture ?" && answer == "No") or
+        f20 : Question(question == "Like construction problems ?" && answer == "Yes") or
+        f21 : Question(question == "Like construction problems ?" && answer == "No")
+        f22 : Question(question == "Wish You hadn't taken engineering ?" && answer == "No")
+        f23 : Question(question == "Want graduate studies ?" && answer == "Yes")
+        f24 : Question(question == "Like administration ?" && answer == "Yes")
+    then
+        Komunikator.Zakoncz("Get graduate degree in business administration !");
+        Question query = new Question();
+        query.setQuestion("Graduate administration ?");
+        query.setAnswer("Yes");
+        insert(query);
+    end
+
+rule "noreallylikemath"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like electronics ? " && answer == "Yes") or
+        f15 : Question(question == "Like chemistry ? " && answer == "Yes") or
+        f16 : Question(question == "Suffer from claustrophobia ?" && answer == "Yes") or
+        f17 : Question(question == "Suffer from claustrophobia ?" && answer == "No") or
+        f18 : Question(question == "Interested in agriculture ?" && answer == "Yes") or
+        f19 : Question(question == "Interested in agriculture ?" && answer == "No") or
+        f20 : Question(question == "Like construction problems ?" && answer == "Yes") or
+        f21 : Question(question == "Like construction problems ?" && answer == "No")
+        f22 : Question(question == "Wish You hadn't taken engineering ?" && answer == "No")
+        f23 : Question(question == "Want graduate studies ?" && answer == "Yes")
+        f24 : Question(question == "Like administration ?" && answer == "No")
+        f25 : Question(question == "Really, really like mathematics ?" && answer == "No")
+    then
+        Komunikator.Zakoncz("Field some other field of endeavor !");
+    end
+
+rule "reallylikemath2"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like electronics ? " && answer == "Yes") or
+        f15 : Question(question == "Like chemistry ? " && answer == "Yes") or
+        f16 : Question(question == "Suffer from claustrophobia ?" && answer == "Yes") or
+        f17 : Question(question == "Suffer from claustrophobia ?" && answer == "No") or
+        f18 : Question(question == "Interested in agriculture ?" && answer == "Yes") or
+        f19 : Question(question == "Interested in agriculture ?" && answer == "No") or
+        f20 : Question(question == "Like construction problems ?" && answer == "Yes") or
+        f21 : Question(question == "Like construction problems ?" && answer == "No")
+        f22 : Question(question == "Wish You hadn't taken engineering ?" && answer == "No")
+        f23 : Question(question == "Want graduate studies ?" && answer == "Yes")
+        f24 : Question(question == "Like administration ?" && answer == "No")
+        f25 : Question(question == "Really, really like mathematics ?" && answer == "Yes")
+    then
+        Komunikator.Zakoncz("Get graduate degree in engineering !");
+        Question query = new Question();
+        query.setQuestion("Graduate engineering ?");
+        query.setAnswer("Yes");
+        insert(query);
+    end
+
+rule "teaching"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like electronics ? " && answer == "Yes") or
+        f15 : Question(question == "Like chemistry ? " && answer == "Yes") or
+        f16 : Question(question == "Suffer from claustrophobia ?" && answer == "Yes") or
+        f17 : Question(question == "Suffer from claustrophobia ?" && answer == "No") or
+        f18 : Question(question == "Interested in agriculture ?" && answer == "Yes") or
+        f19 : Question(question == "Interested in agriculture ?" && answer == "No") or
+        f20 : Question(question == "Like construction problems ?" && answer == "Yes") or
+        f21 : Question(question == "Like construction problems ?" && answer == "No")
+        f22 : Question(question == "Wish You hadn't taken engineering ?" && answer == "No")
+        f23 : Question(question == "Want graduate studies ?" && answer == "Yes")
+        f24 : Question(question == "Graduate engineering ?" && answer == "Yes") or
+        f25 : Question(question == "Graduate administration ?" && answer == "Yes")
+    then
+        Question query = new Question();
+        query.setQuestion("Like teaching ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "research"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like electronics ? " && answer == "Yes") or
+        f15 : Question(question == "Like chemistry ? " && answer == "Yes") or
+        f16 : Question(question == "Suffer from claustrophobia ?" && answer == "Yes") or
+        f17 : Question(question == "Suffer from claustrophobia ?" && answer == "No") or
+        f18 : Question(question == "Interested in agriculture ?" && answer == "Yes") or
+        f19 : Question(question == "Interested in agriculture ?" && answer == "No") or
+        f20 : Question(question == "Like construction problems ?" && answer == "Yes") or
+        f21 : Question(question == "Like construction problems ?" && answer == "No")
+        f22 : Question(question == "Wish You hadn't taken engineering ?" && answer == "No")
+        f23 : Question(question == "Want graduate studies ?" && answer == "Yes")
+        f24 : Question(question == "Graduate engineering ?" && answer == "Yes") or
+        f25 : Question(question == "Graduate administration ?" && answer == "Yes")
+        f26 : Question(question == "Like teaching ?" && answer == "No")
+    then
+        Question query = new Question();
+        query.setQuestion("Like research ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "professor"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like electronics ? " && answer == "Yes") or
+        f15 : Question(question == "Like chemistry ? " && answer == "Yes") or
+        f16 : Question(question == "Suffer from claustrophobia ?" && answer == "Yes") or
+        f17 : Question(question == "Suffer from claustrophobia ?" && answer == "No") or
+        f18 : Question(question == "Interested in agriculture ?" && answer == "Yes") or
+        f19 : Question(question == "Interested in agriculture ?" && answer == "No") or
+        f20 : Question(question == "Like construction problems ?" && answer == "Yes") or
+        f21 : Question(question == "Like construction problems ?" && answer == "No")
+        f22 : Question(question == "Wish You hadn't taken engineering ?" && answer == "No")
+        f23 : Question(question == "Want graduate studies ?" && answer == "Yes")
+        f24 : Question(question == "Graduate engineering ?" && answer == "Yes") or
+        f25 : Question(question == "Graduate administration ?" && answer == "Yes")
+        f26 : Question(question == "Like teaching ?" && answer == "Yes")
+    then
+        Komunikator.Zapytaj("Become university professor !");
+    end
+
+rule "yesresearch"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like electronics ? " && answer == "Yes") or
+        f15 : Question(question == "Like chemistry ? " && answer == "Yes") or
+        f16 : Question(question == "Suffer from claustrophobia ?" && answer == "Yes") or
+        f17 : Question(question == "Suffer from claustrophobia ?" && answer == "No") or
+        f18 : Question(question == "Interested in agriculture ?" && answer == "Yes") or
+        f19 : Question(question == "Interested in agriculture ?" && answer == "No") or
+        f20 : Question(question == "Like construction problems ?" && answer == "Yes") or
+        f21 : Question(question == "Like construction problems ?" && answer == "No")
+        f22 : Question(question == "Wish You hadn't taken engineering ?" && answer == "No")
+        f23 : Question(question == "Want graduate studies ?" && answer == "Yes")
+        f24 : Question(question == "Graduate engineering ?" && answer == "Yes") or
+        f25 : Question(question == "Graduate administration ?" && answer == "Yes")
+        f26 : Question(question == "Like teaching ?" && answer == "No")
+        f27 : Question(question == "Like research ?" && answer == "Yes")
+    then
+        Komunikator.Zapytaj("Join research department !");
+    end
+
+rule "sales"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like electronics ? " && answer == "Yes") or
+        f15 : Question(question == "Like chemistry ? " && answer == "Yes") or
+        f16 : Question(question == "Suffer from claustrophobia ?" && answer == "Yes") or
+        f17 : Question(question == "Suffer from claustrophobia ?" && answer == "No") or
+        f18 : Question(question == "Interested in agriculture ?" && answer == "Yes") or
+        f19 : Question(question == "Interested in agriculture ?" && answer == "No") or
+        f20 : Question(question == "Like construction problems ?" && answer == "Yes") or
+        f21 : Question(question == "Like construction problems ?" && answer == "No")
+        f22 : Question(question == "Wish You hadn't taken engineering ?" && answer == "No")
+        f23 : Question(question == "Want graduate studies ?" && answer == "Yes") or
+        f24 : Question(question == "Want graduate studies ?" && answer == "No")
+        f25 : Question(question == "Graduate engineering ?" && answer == "Yes") or
+        f26 : Question(question == "Graduate administration ?" && answer == "Yes") or
+        f27 : Question(question == "Want graduate studies ?" && answer == "No")
+        f28 : Question(question == "Like teaching ?" && answer == "No") or
+        f29 : Question(question == "Want graduate studies ?" && answer == "No")
+        f30 : Question(question == "Like research ?" && answer == "No") or
+        f31 : Question(question == "Want graduate studies ?" && answer == "No")
+    then
+        Question query = new Question();
+        query.setQuestion("Like sales ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "management"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like electronics ? " && answer == "Yes") or
+        f15 : Question(question == "Like chemistry ? " && answer == "Yes") or
+        f16 : Question(question == "Suffer from claustrophobia ?" && answer == "Yes") or
+        f17 : Question(question == "Suffer from claustrophobia ?" && answer == "No") or
+        f18 : Question(question == "Interested in agriculture ?" && answer == "Yes") or
+        f19 : Question(question == "Interested in agriculture ?" && answer == "No") or
+        f20 : Question(question == "Like construction problems ?" && answer == "Yes") or
+        f21 : Question(question == "Like construction problems ?" && answer == "No")
+        f22 : Question(question == "Wish You hadn't taken engineering ?" && answer == "No")
+        f23 : Question(question == "Want graduate studies ?" && answer == "Yes") or
+        f24 : Question(question == "Want graduate studies ?" && answer == "No")
+        f25 : Question(question == "Graduate engineering ?" && answer == "Yes") or
+        f26 : Question(question == "Graduate administration ?" && answer == "Yes") or
+        f27 : Question(question == "Want graduate studies ?" && answer == "No")
+        f28 : Question(question == "Like teaching ?" && answer == "No") or
+        f29 : Question(question == "Want graduate studies ?" && answer == "No")
+        f30 : Question(question == "Like research ?" && answer == "No") or
+        f31 : Question(question == "Want graduate studies ?" && answer == "No")
+        f32 : Question(question == "Like sales ?" && answer == "No")
+    then
+        Question query = new Question();
+        query.setQuestion("Like management ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "yessales"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like electronics ? " && answer == "Yes") or
+        f15 : Question(question == "Like chemistry ? " && answer == "Yes") or
+        f16 : Question(question == "Suffer from claustrophobia ?" && answer == "Yes") or
+        f17 : Question(question == "Suffer from claustrophobia ?" && answer == "No") or
+        f18 : Question(question == "Interested in agriculture ?" && answer == "Yes") or
+        f19 : Question(question == "Interested in agriculture ?" && answer == "No") or
+        f20 : Question(question == "Like construction problems ?" && answer == "Yes") or
+        f21 : Question(question == "Like construction problems ?" && answer == "No")
+        f22 : Question(question == "Wish You hadn't taken engineering ?" && answer == "No")
+        f23 : Question(question == "Want graduate studies ?" && answer == "Yes") or
+        f24 : Question(question == "Want graduate studies ?" && answer == "No")
+        f25 : Question(question == "Graduate engineering ?" && answer == "Yes") or
+        f26 : Question(question == "Graduate administration ?" && answer == "Yes") or
+        f27 : Question(question == "Want graduate studies ?" && answer == "No")
+        f28 : Question(question == "Like teaching ?" && answer == "No") or
+        f29 : Question(question == "Want graduate studies ?" && answer == "No")
+        f30 : Question(question == "Like research ?" && answer == "No") or
+        f31 : Question(question == "Want graduate studies ?" && answer == "No")
+        f32 : Question(question == "Like sales ?" && answer == "Yes")
+    then
+        Komunikator.Zakoncz("Become technical representative !");
+    end
+
+rule "business"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like electronics ? " && answer == "Yes") or
+        f15 : Question(question == "Like chemistry ? " && answer == "Yes") or
+        f16 : Question(question == "Suffer from claustrophobia ?" && answer == "Yes") or
+        f17 : Question(question == "Suffer from claustrophobia ?" && answer == "No") or
+        f18 : Question(question == "Interested in agriculture ?" && answer == "Yes") or
+        f19 : Question(question == "Interested in agriculture ?" && answer == "No") or
+        f20 : Question(question == "Like construction problems ?" && answer == "Yes") or
+        f21 : Question(question == "Like construction problems ?" && answer == "No")
+        f22 : Question(question == "Wish You hadn't taken engineering ?" && answer == "No")
+        f23 : Question(question == "Want graduate studies ?" && answer == "Yes") or
+        f24 : Question(question == "Want graduate studies ?" && answer == "No")
+        f25 : Question(question == "Graduate engineering ?" && answer == "Yes") or
+        f26 : Question(question == "Graduate administration ?" && answer == "Yes") or
+        f27 : Question(question == "Want graduate studies ?" && answer == "No")
+        f28 : Question(question == "Like teaching ?" && answer == "No") or
+        f29 : Question(question == "Want graduate studies ?" && answer == "No")
+        f30 : Question(question == "Like research ?" && answer == "No") or
+        f31 : Question(question == "Want graduate studies ?" && answer == "No")
+        f32 : Question(question == "Like sales ?" && answer == "No")
+        f33 : Question(question == "Like management ?" && answer == "Yes")
+    then
+        Question query = new Question();
+        query.setQuestion("Want Your own business ?");
+        query.setAnswer(Komunikator.Zapytaj(query.getQuestion()));
+        insert(query);
+    end
+
+rule "staff"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like electronics ? " && answer == "Yes") or
+        f15 : Question(question == "Like chemistry ? " && answer == "Yes") or
+        f16 : Question(question == "Suffer from claustrophobia ?" && answer == "Yes") or
+        f17 : Question(question == "Suffer from claustrophobia ?" && answer == "No") or
+        f18 : Question(question == "Interested in agriculture ?" && answer == "Yes") or
+        f19 : Question(question == "Interested in agriculture ?" && answer == "No") or
+        f20 : Question(question == "Like construction problems ?" && answer == "Yes") or
+        f21 : Question(question == "Like construction problems ?" && answer == "No")
+        f22 : Question(question == "Wish You hadn't taken engineering ?" && answer == "No")
+        f23 : Question(question == "Want graduate studies ?" && answer == "Yes") or
+        f24 : Question(question == "Want graduate studies ?" && answer == "No")
+        f25 : Question(question == "Graduate engineering ?" && answer == "Yes") or
+        f26 : Question(question == "Graduate administration ?" && answer == "Yes") or
+        f27 : Question(question == "Want graduate studies ?" && answer == "No")
+        f28 : Question(question == "Like teaching ?" && answer == "No") or
+        f29 : Question(question == "Want graduate studies ?" && answer == "No")
+        f30 : Question(question == "Like research ?" && answer == "No") or
+        f31 : Question(question == "Want graduate studies ?" && answer == "No")
+        f32 : Question(question == "Like sales ?" && answer == "No")
+        f33 : Question(question == "Like management ?" && answer == "No")
+    then
+        Komunikator.Zakoncz("Join technical staff !");
+    end
+
+rule "consulting"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like electronics ? " && answer == "Yes") or
+        f15 : Question(question == "Like chemistry ? " && answer == "Yes") or
+        f16 : Question(question == "Suffer from claustrophobia ?" && answer == "Yes") or
+        f17 : Question(question == "Suffer from claustrophobia ?" && answer == "No") or
+        f18 : Question(question == "Interested in agriculture ?" && answer == "Yes") or
+        f19 : Question(question == "Interested in agriculture ?" && answer == "No") or
+        f20 : Question(question == "Like construction problems ?" && answer == "Yes") or
+        f21 : Question(question == "Like construction problems ?" && answer == "No")
+        f22 : Question(question == "Wish You hadn't taken engineering ?" && answer == "No")
+        f23 : Question(question == "Want graduate studies ?" && answer == "Yes") or
+        f24 : Question(question == "Want graduate studies ?" && answer == "No")
+        f25 : Question(question == "Graduate engineering ?" && answer == "Yes") or
+        f26 : Question(question == "Graduate administration ?" && answer == "Yes") or
+        f27 : Question(question == "Want graduate studies ?" && answer == "No")
+        f28 : Question(question == "Like teaching ?" && answer == "No") or
+        f29 : Question(question == "Want graduate studies ?" && answer == "No")
+        f30 : Question(question == "Like research ?" && answer == "No") or
+        f31 : Question(question == "Want graduate studies ?" && answer == "No")
+        f32 : Question(question == "Like sales ?" && answer == "No")
+        f33 : Question(question == "Like management ?" && answer == "Yes")
+        f34 : Question(question == "Want Your own business ?" && answer == "Yes")
+    then
+        Komunikator.Zakoncz("Get at least 10 years experience !");
+        Komunikator.Zakoncz("Start consulting firm !");
+    end
+
+rule "production"
+    when
+        f1 : Question(question == "Do You want a responsible job ?" && answer == "Yes")
+        f2 : Question(question == "Marks higher than 60% ?" && answer == "Yes")
+        f3 : Question(question == "Willing to study hard ?" && answer == "Yes")
+        f4 : Question(question == "Do You want to help society ?" && answer == "Yes")
+        f5 : Question(question == "Are You good in English or French ?" && answer == "Yes")
+        f6 : Question(question == "Want to become rich ?" && answer == "No")
+        f7 : Question(question == "Interested in practical problems ?" && answer == "Yes")
+        f8 : Question(question == "Think these questions are endless ?" && answer == "No")
+        f9 : Question(question == "Interested in science ?" && answer == "Yes")
+        f10 : Question(question == "Interested in mathematics ?" && answer == "Yes")
+        f11 : Question(question == "Good at mathematics ?" && answer == "Yes")
+        f12 : Question(question == "Good at analysing logical problems ?" && answer == "Yes")
+        f13 : Question(question == "Prefer application over theory ?" && answer == "Yes")
+        f14 : Question(question == "Like electronics ? " && answer == "Yes") or
+        f15 : Question(question == "Like chemistry ? " && answer == "Yes") or
+        f16 : Question(question == "Suffer from claustrophobia ?" && answer == "Yes") or
+        f17 : Question(question == "Suffer from claustrophobia ?" && answer == "No") or
+        f18 : Question(question == "Interested in agriculture ?" && answer == "Yes") or
+        f19 : Question(question == "Interested in agriculture ?" && answer == "No") or
+        f20 : Question(question == "Like construction problems ?" && answer == "Yes") or
+        f21 : Question(question == "Like construction problems ?" && answer == "No")
+        f22 : Question(question == "Wish You hadn't taken engineering ?" && answer == "No")
+        f23 : Question(question == "Want graduate studies ?" && answer == "Yes") or
+        f24 : Question(question == "Want graduate studies ?" && answer == "No")
+        f25 : Question(question == "Graduate engineering ?" && answer == "Yes") or
+        f26 : Question(question == "Graduate administration ?" && answer == "Yes") or
+        f27 : Question(question == "Want graduate studies ?" && answer == "No")
+        f28 : Question(question == "Like teaching ?" && answer == "No") or
+        f29 : Question(question == "Want graduate studies ?" && answer == "No")
+        f30 : Question(question == "Like research ?" && answer == "No") or
+        f31 : Question(question == "Want graduate studies ?" && answer == "No")
+        f32 : Question(question == "Like sales ?" && answer == "No")
+        f33 : Question(question == "Like management ?" && answer == "Yes")
+        f34 : Question(question == "Want Your own business ?" && answer == "No")
+    then
+        Komunikator.Zakoncz("Join production staff !");
+    end
